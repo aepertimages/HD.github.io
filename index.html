@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+	<title>HD抽獎囉！</title>
+<style>
+*{
+	margin: 0;
+	padding: 0;
+
+}
+
+#lottery-wrap{
+    position: relative;
+	display: block;
+	margin: 20px auto;
+	width: 300px;
+    border: 8px solid #FF0000;
+    border-radius: 50%;
+    box-shadow: 3px 0 3px #ffffff, 0px 3px 3px #ffffff, -3px 0 3px #ffffff, 0px -3px 3px #ffffff;
+}
+canvas{
+    display: block;
+
+}
+
+#lottery-handler{
+    position: absolute;
+    z-index: 2;
+    width: 60px;
+    height: 74px;
+    left: 50%;
+    top: 50%;
+    margin: -44px 0 0 -30px;
+    background: url(./images/handler.png) no-repeat 50%;
+    background-size: contain;
+}
+</style>
+</head>
+<body>
+
+<div id="lottery-wrap">
+    <div id="lottery-handler"></div>
+    <canvas width="300" height="300" id="lottery"></canvas>
+</div>
+
+<script src="./Lottery.js"></script>
+<script>
+
+/*模拟ajax请求数据返回*/
+function _ajax(callback){
+	/*jQuery.ajax({
+		url: url,
+		data: data,
+		success: function(response){
+			callback && callback(response);
+		}
+	})*/
+	setTimeout(function(){
+		var _index   = Math.floor(Math.random()*products.length);
+		var response = {id: 1, name: products[_index].name, index: _index};
+		callback && callback(response);
+	}, 100);
+}
+
+var products = [
+    {
+        "imgUrl": "./images/1.jpg",
+        "name": "阿湯"
+    },
+
+    {
+        "imgUrl": "./images/2.jpg",
+        "name": "周周"
+    },
+    {
+        "imgUrl": "./images/3.jpg",
+        "name": "Jones"
+    },
+    {
+        "imgUrl": "./images/4.jpg",
+        "name": "Rosa"
+    },
+    {
+        "imgUrl": "./images/5.jpg",
+        "name": "Ryan"
+    },
+ 
+    {
+        "imgUrl": "./images/6.jpg",
+        "name": "婉茹"
+    }
+];
+
+new Lottery(document.getElementById('lottery'), {
+	handler: document.getElementById('lottery-handler'),
+	handlerCallback: function(_interface){
+		/*ajax获取中奖结果*/
+		_ajax(function(response){
+			console.log(response);
+			/*指定停止的位置:索引*/
+			_interface.stop(response.index, function(){
+				alert( '讓我們恭喜【' + response.name + '】成為下週站立會議主持人 d(^_^o)'   )
+			});
+		});
+	},
+    images: {
+        width: 40,
+        height: 40,
+        y: '88%',
+    },
+	products: products
+});
+
+</script>
+</body>
+</html>
